@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Edit TagPost{% endblock %}
+
+{% block body %}
+    <h1>Edit TagPost</h1>
+
+    {{ include('tag_post/_form.html.twig', {'button_label': 'Update'}) }}
+
+    <a href="{{ path('tag_post_index') }}">back to list</a>
+
+    {{ include('tag_post/_delete_form.html.twig') }}
+{% endblock %}

@@ -1,0 +1,11 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}New TagPost{% endblock %}
+
+{% block body %}
+    <h1>Create new TagPost</h1>
+
+    {{ include('tag_post/_form.html.twig') }}
+
+    <a href="{{ path('tag_post_index') }}">back to list</a>
+{% endblock %}

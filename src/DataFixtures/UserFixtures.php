@@ -4,41 +4,60 @@ namespace App\DataFixtures;
 
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
-use Faker\Factory;
+use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use App\Entity\User;
+use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 
 
 
 class UserFixtures extends Fixture implements DependentFixtureInterface
 {
     
-    protected $faker;
+    private $passwordEncoder;
+
+    public function __construct(UserPasswordEncoderInterface $passwordEncoder)
+    {
+         $this->passwordEncoder = $passwordEncoder;
+    }
 
     public function load(ObjectManager $manager)
     {   
-        $this->manager = $manager;
-        $this->faker = Factory::create();
-        for ($i = 0; $i < 20; $i++) {
-            
-            $user = new User();
-            $user->setfirstName($this->faker->firstName);
-            $user->setlastName($this->faker->lastName);
-            $user->setEmail($this->faker->email);
-            $user->setPassword($this->faker->lastName);
-            $user->setPhone($this->faker->lastName);
-            $user->setAge($this->faker->lastName);
-            $user->setCreatedAt( new \dateTime());
-            $user->setCityId($this->getReference(CityFixtures::FIRST_CITY));
+        $user = new User();
+        $user->setfirstName("tony");
+        $user->setlastName("dupond");
+        $user->setEmail("admin@email.fr");
+        $user->setPassword($this->passwordEncoder->encodePassword($user,'admin'));
+        $user->setPhone("0505050505");
+        $user->setAge(18);
+        $user->setRoles(["ROLE_ADMIN"]); 
+        $user->setCreatedAt( new \DateTime("2020-11-01 08:00"));
+        $user->setCityId($this->getReference("Paris"));
+        $this->addReference("admin@email.fr", $user);
 
-            $manager->persist($user);
-        }
+        $manager->persist($user);
 
-           $manager->flush();
+        $user2 = new User();
+        $user2->setfirstName("jean");
+        $user2->setlastName("PETITPIED");
+        $user2->setEmail("user@email.fr");
+        $user2->setPassword($this->passwordEncoder->encodePassword($user2,'user'));
+        $user2->setPhone("0606060606");
+        $user2->setAge(25);
+        $user2->setRoles(["ROLE_USER"]); 
+        $user2->setCreatedAt( new \DateTime("2020-11-01 08:00"));
+        $user2->setCityId($this->getReference("Périgueux"));
+        $this->addReference("user@email.fr", $user2);
+
+        $manager->persist($user2);
+    
+
+        $manager->flush();
     }
+
     public function getDependencies()
     {
         return [
-            CityFixture::class,
+            CityFixtures::class,
         ];
     }
 }
