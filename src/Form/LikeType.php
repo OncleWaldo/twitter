@@ -12,8 +12,9 @@ class LikeType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('userId')
-            ->add('postId')
+            ->add('user')
+            ->add('post')
+            ->add('comment')
         ;
     }
 

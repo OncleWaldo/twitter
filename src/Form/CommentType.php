@@ -13,9 +13,7 @@ class CommentType extends AbstractType
     {
         $builder
             ->add('content')
-            ->add('userId')
-            ->add('postId')
-            ->add('commentId')
+            ->add('post')
         ;
     }
 

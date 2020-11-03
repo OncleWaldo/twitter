@@ -11,7 +11,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
- * @Route("/tag_post")
+ * @Route("/tag/post")
  */
 class TagPostController extends AbstractController
 {

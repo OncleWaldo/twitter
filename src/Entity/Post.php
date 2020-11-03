@@ -2,13 +2,13 @@
 
 namespace App\Entity;
 
-use App\Repository\PostsRepository;
+use App\Repository\PostRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity(repositoryClass=PostsRepository::class)
+ * @ORM\Entity(repositoryClass=PostRepository::class)
  */
 class Post
 {
@@ -35,36 +35,34 @@ class Post
     private $postedAt;
 
     /**
-     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="posts")
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\OneToMany(targetEntity=Like::class, mappedBy="post", orphanRemoval=true)
      */
-    private $userId;
+    private $likes;
 
     /**
-     * @ORM\OneToMany(targetEntity=TagPost::class, mappedBy="postId")
-     */
-    private $tagPosts;
-
-    /**
-     * @ORM\OneToMany(targetEntity=Comment::class, mappedBy="postId")
+     * @ORM\OneToMany(targetEntity=Comment::class, mappedBy="post", orphanRemoval=true)
      */
     private $comments;
 
     /**
-     * @ORM\OneToMany(targetEntity=Like::class, mappedBy="postId", orphanRemoval=true)
+     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="posts")
+     * @ORM\JoinColumn(nullable=false)
      */
-    private $likes;
+    private $user;
 
-
+    /**
+     * @ORM\OneToMany(targetEntity=TagPost::class, mappedBy="post")
+     */
+    private $tagPosts;
 
     public function __construct()
     {
-        $this->tagPosts = new ArrayCollection();
-        $this->comments = new ArrayCollection();
         $this->likes = new ArrayCollection();
+        $this->comments = new ArrayCollection();
+        $this->tagPosts = new ArrayCollection();
     }
 
-    
+
 
     public function getId(): ?int
     {
@@ -107,42 +105,30 @@ class Post
         return $this;
     }
 
-    public function getUserId(): ?User
-    {
-        return $this->userId;
-    }
-
-    public function setUserId(?User $userId): self
-    {
-        $this->userId = $userId;
-
-        return $this;
-    }
-
     /**
-     * @return Collection|TagPost[]
+     * @return Collection|Like[]
      */
-    public function getTagPosts(): Collection
+    public function getLikes(): Collection
     {
-        return $this->tagPosts;
+        return $this->likes;
     }
 
-    public function addTagPost(TagPost $tagPost): self
+    public function addLike(Like $like): self
     {
-        if (!$this->tagPosts->contains($tagPost)) {
-            $this->tagPosts[] = $tagPost;
-            $tagPost->setPostId($this);
+        if (!$this->likes->contains($like)) {
+            $this->likes[] = $like;
+            $like->setPost($this);
         }
 
         return $this;
     }
 
-    public function removeTagPost(TagPost $tagPost): self
+    public function removeLike(Like $like): self
     {
-        if ($this->tagPosts->removeElement($tagPost)) {
+        if ($this->likes->removeElement($like)) {
             // set the owning side to null (unless already changed)
-            if ($tagPost->getPostId() === $this) {
-                $tagPost->setPostId(null);
+            if ($like->getPost() === $this) {
+                $like->setPost(null);
             }
         }
 
@@ -161,7 +147,7 @@ class Post
     {
         if (!$this->comments->contains($comment)) {
             $this->comments[] = $comment;
-            $comment->setPostId($this);
+            $comment->setPost($this);
         }
 
         return $this;
@@ -171,44 +157,54 @@ class Post
     {
         if ($this->comments->removeElement($comment)) {
             // set the owning side to null (unless already changed)
-            if ($comment->getPostId() === $this) {
-                $comment->setPostId(null);
+            if ($comment->getPost() === $this) {
+                $comment->setPost(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(?User $user): self
+    {
+        $this->user = $user;
 
         return $this;
     }
 
     /**
-     * @return Collection|Like[]
+     * @return Collection|TagPost[]
      */
-    public function getLikes(): Collection
+    public function getTagPosts(): Collection
     {
-        return $this->likes;
+        return $this->tagPosts;
     }
 
-    public function addLike(Like $like): self
+    public function addTagPost(TagPost $tagPost): self
     {
-        if (!$this->likes->contains($like)) {
-            $this->likes[] = $like;
-            $like->setPostId($this);
+        if (!$this->tagPosts->contains($tagPost)) {
+            $this->tagPosts[] = $tagPost;
+            $tagPost->setPost($this);
         }
 
         return $this;
     }
 
-    public function removeLike(Like $like): self
+    public function removeTagPost(TagPost $tagPost): self
     {
-        if ($this->likes->removeElement($like)) {
+        if ($this->tagPosts->removeElement($tagPost)) {
             // set the owning side to null (unless already changed)
-            if ($like->getPostId() === $this) {
-                $like->setPostId(null);
+            if ($tagPost->getPost() === $this) {
+                $tagPost->setPost(null);
             }
         }
 
         return $this;
     }
-
-
 
 }

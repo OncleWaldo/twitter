@@ -21,39 +21,41 @@ class TagPost
      * @ORM\ManyToOne(targetEntity=Tag::class, inversedBy="tagPosts")
      * @ORM\JoinColumn(nullable=false)
      */
-    private $tagId;
+    private $tag;
 
     /**
      * @ORM\ManyToOne(targetEntity=Post::class, inversedBy="tagPosts")
      * @ORM\JoinColumn(nullable=false)
      */
-    private $postId;
+    private $post;
+
+    
 
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getTagId(): ?Tag
+    public function getTag(): ?Tag
     {
-        return $this->tagId;
+        return $this->tag;
     }
 
-    public function setTagId(?Tag $tagId): self
+    public function setTag(?Tag $tag): self
     {
-        $this->tagId = $tagId;
+        $this->tag = $tag;
 
         return $this;
     }
 
-    public function getPostId(): ?Post
+    public function getPost(): ?Post
     {
-        return $this->postId;
+        return $this->post;
     }
 
-    public function setPostId(?Post $postId): self
+    public function setPost(?Post $post): self
     {
-        $this->postId = $postId;
+        $this->post = $post;
 
         return $this;
     }

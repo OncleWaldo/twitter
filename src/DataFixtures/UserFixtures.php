@@ -31,7 +31,7 @@ class UserFixtures extends Fixture implements DependentFixtureInterface
         $user->setAge(18);
         $user->setRoles(["ROLE_ADMIN"]); 
         $user->setCreatedAt( new \DateTime("2020-11-01 08:00"));
-        $user->setCityId($this->getReference("Paris"));
+        $user->setCity($this->getReference("Paris"));
         $this->addReference("admin@email.fr", $user);
 
         $manager->persist($user);
@@ -45,7 +45,7 @@ class UserFixtures extends Fixture implements DependentFixtureInterface
         $user2->setAge(25);
         $user2->setRoles(["ROLE_USER"]); 
         $user2->setCreatedAt( new \DateTime("2020-11-01 08:00"));
-        $user2->setCityId($this->getReference("Périgueux"));
+        $user2->setCity($this->getReference("Périgueux"));
         $this->addReference("user@email.fr", $user2);
 
         $manager->persist($user2);

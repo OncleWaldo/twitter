@@ -14,8 +14,8 @@ class MessageType extends AbstractType
         $builder
             ->add('content')
             ->add('sentAt')
-            ->add('senderId')
-            ->add('receiverId')
+            ->add('sender')
+            ->add('receiver')
         ;
     }
 

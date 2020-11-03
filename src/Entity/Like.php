@@ -20,14 +20,22 @@ class Like
 
     /**
      * @ORM\ManyToOne(targetEntity=User::class, inversedBy="likes")
+     * @ORM\JoinColumn(nullable=false)
      */
-    private $userId;
+    private $user;
 
     /**
      * @ORM\ManyToOne(targetEntity=Post::class, inversedBy="likes")
      * @ORM\JoinColumn(nullable=false)
      */
-    private $postId;
+    private $post;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=Comment::class, inversedBy="likes")
+     */
+    private $comment;
+
+
 
 
 
@@ -36,29 +44,40 @@ class Like
         return $this->id;
     }
 
-    public function getUserId(): ?User
+    public function getUser(): ?User
     {
-        return $this->userId;
+        return $this->user;
     }
 
-    public function setUserId(?User $userId): self
+    public function setUser(?User $user): self
     {
-        $this->userId = $userId;
+        $this->user = $user;
 
         return $this;
     }
 
-    public function getPostId(): ?Post
+    public function getPost(): ?Post
     {
-        return $this->postId;
+        return $this->post;
     }
 
-    public function setPostId(?Post $postId): self
+    public function setPost(?Post $post): self
     {
-        $this->postId = $postId;
+        $this->post = $post;
 
         return $this;
     }
 
+    public function getComment(): ?Comment
+    {
+        return $this->comment;
+    }
+
+    public function setComment(?Comment $comment): self
+    {
+        $this->comment = $comment;
+
+        return $this;
+    }
 
 }
