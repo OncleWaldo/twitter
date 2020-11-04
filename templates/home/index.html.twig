@@ -29,41 +29,58 @@
 		</p>
     
     {% for post in posts %}
-    {{dump(post)}}
+    
+    {# {{dump(post)}} #}
       <div class="container-fluid mx-auto my-3">
         <div class="card">
+          <div class="card-header d-flex">
+              <div class="text-left"> 
+                <a href="/user/{{ post.user.id }}">
+                <h3>
+                  {{ post.user.firstname}} {{ post.user.lastname}}
+                </h3>
+              </a>
+              <small>{{ post.postedAt ? post.postedAt|date('Y-m-d H:i:s') : '' }}</small>
+              </div>
+          </div>
           <div class="card-body">
             <h5 class="card-title">
               {{post.title}}
             </h5>
-            <h6 class="card-subtitle mb-2 text-muted">
-              {{app.user.userName}}
-            </h6>
             <p class="card-text">
               {{post.content}}
             </p>
-            <small>ajouté le {{ post.postedAt ? post.postedAt|date('Y-m-d H:i:s') : '' }}</small>
-            <a href="#" class="card-link"><i class="far fa-thumbs-up"></i></a>
+          </div>
+          <div class="card-footer">
+            <a href="#" class="card-link">
+              <i class="far fa-thumbs-up"></i>
+            </a>
+            <form action="/" method="post">
+                <input name="content" type="text"  required>
+                <input type="hidden" name="token" value="{{ csrf_token('comment_new') }}"/>
+                <input type="hidden" name="postid" value="{{ post.id }}"/>
+                <input type="submit" />
+            </form>
               <ul class="list-group list-group-flush">
-                 <li class="list-group-item">
-                    <form action="/" method="post">
-                        <input name="content" type="text"  required>
-                        <input type="hidden" name="token" value="{{ csrf_token('comment_new') }}"/>
-                        <input type="hidden" name="postid" value="{{ post.id }}"/>
-                        <input type="submit" />
-                    </form>
-                 </li> 
                   {% for comment in post.comments %}
-                   <li class="list-group-item">
-                        {{comment.content}}
-                   </li>
+                    <li class="list-group-item d-flex">
+                        <div>
+                          <div class="text-left">
+                            <span class="font-weight-bold">{{comment.user.firstname}} {{comment.user.lastname}}</span>
+                            <p class="font-weight-light">
+                              {{comment.content}}
+                            </p>
+                          </div>
+                          <a href="/" class="text-right">
+                            <i class="far fa-thumbs-up"></i>
+                          </a>
+                        </div>
+                    </li>
                   {% endfor %}
               </ul>
-            
           </div>
         </div>
       </div>
-      {# <small>liké par {{ post.likes.user}}</small> #}
 
     {% endfor %}
 
