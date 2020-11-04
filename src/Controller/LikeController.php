@@ -36,6 +36,7 @@ class LikeController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager = $this->getDoctrine()->getManager();
+            $like->setUser($this->getUser());
             $entityManager->persist($like);
             $entityManager->flush();
 

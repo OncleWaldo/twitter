@@ -44,7 +44,22 @@
             </p>
             <small>ajouté le {{ post.postedAt ? post.postedAt|date('Y-m-d H:i:s') : '' }}</small>
             <a href="#" class="card-link"><i class="far fa-thumbs-up"></i></a>
-            <a href="#" class="card-link">Another link</a>
+              <ul class="list-group list-group-flush">
+                 <li class="list-group-item">
+                    <form action="/" method="post">
+                        <input name="content" type="text"  required>
+                        <input type="hidden" name="token" value="{{ csrf_token('comment_new') }}"/>
+                        <input type="hidden" name="postid" value="{{ post.id }}"/>
+                        <input type="submit" />
+                    </form>
+                 </li> 
+                  {% for comment in post.comments %}
+                   <li class="list-group-item">
+                        {{comment.content}}
+                   </li>
+                  {% endfor %}
+              </ul>
+            
           </div>
         </div>
       </div>
