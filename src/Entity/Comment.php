@@ -25,36 +25,28 @@ class Comment
     private $content;
 
     /**
-     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="comments")
-     * @ORM\JoinColumn(nullable=false)
-     */
-    private $userId;
-
-    /**
-     * @ORM\ManyToOne(targetEntity=Post::class, inversedBy="comments")
-     */
-    private $postId;
-
-    /**
-     * @ORM\ManyToOne(targetEntity=Comment::class, inversedBy="comments")
-     */
-    private $commentId;
-
-    /**
-     * @ORM\OneToMany(targetEntity=Comment::class, mappedBy="commentId")
-     */
-    private $comments;
-
-    /**
-     * @ORM\OneToMany(targetEntity=Like::class, mappedBy="commentId")
+     * @ORM\OneToMany(targetEntity=Like::class, mappedBy="comment")
      */
     private $likes;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=Post::class, inversedBy="comments")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $post;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="comments")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $user;
+
     public function __construct()
     {
-        $this->comments = new ArrayCollection();
         $this->likes = new ArrayCollection();
     }
+
+
 
     public function getId(): ?int
     {
@@ -73,72 +65,6 @@ class Comment
         return $this;
     }
 
-    public function getUserId(): ?User
-    {
-        return $this->userId;
-    }
-
-    public function setUserId(?User $userId): self
-    {
-        $this->userId = $userId;
-
-        return $this;
-    }
-
-    public function getPostId(): ?Post
-    {
-        return $this->postId;
-    }
-
-    public function setPostId(?Post $postId): self
-    {
-        $this->postId = $postId;
-
-        return $this;
-    }
-
-    public function getCommentId(): ?self
-    {
-        return $this->commentId;
-    }
-
-    public function setCommentId(?self $commentId): self
-    {
-        $this->commentId = $commentId;
-
-        return $this;
-    }
-
-    /**
-     * @return Collection|self[]
-     */
-    public function getComments(): Collection
-    {
-        return $this->comments;
-    }
-
-    public function addComment(self $comment): self
-    {
-        if (!$this->comments->contains($comment)) {
-            $this->comments[] = $comment;
-            $comment->setCommentId($this);
-        }
-
-        return $this;
-    }
-
-    public function removeComment(self $comment): self
-    {
-        if ($this->comments->removeElement($comment)) {
-            // set the owning side to null (unless already changed)
-            if ($comment->getCommentId() === $this) {
-                $comment->setCommentId(null);
-            }
-        }
-
-        return $this;
-    }
-
     /**
      * @return Collection|Like[]
      */
@@ -151,7 +77,7 @@ class Comment
     {
         if (!$this->likes->contains($like)) {
             $this->likes[] = $like;
-            $like->setCommentId($this);
+            $like->setComment($this);
         }
 
         return $this;
@@ -161,11 +87,36 @@ class Comment
     {
         if ($this->likes->removeElement($like)) {
             // set the owning side to null (unless already changed)
-            if ($like->getCommentId() === $this) {
-                $like->setCommentId(null);
+            if ($like->getComment() === $this) {
+                $like->setComment(null);
             }
         }
 
         return $this;
     }
+
+    public function getPost(): ?Post
+    {
+        return $this->post;
+    }
+
+    public function setPost(?Post $post): self
+    {
+        $this->post = $post;
+
+        return $this;
+    }
+
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(?User $user): self
+    {
+        $this->user = $user;
+
+        return $this;
+    }
+
 }

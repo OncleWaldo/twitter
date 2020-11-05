@@ -3,18 +3,93 @@
 {% block title %}Hello HomeController!{% endblock %}
 
 {% block body %}
-<style>
-    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
-    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
-</style>
 
-<div class="example-wrapper">
-    <h1>Hello {{ controller_name }}! ✅</h1>
 
-    This friendly message is coming from:
-    <ul>
-        <li>Your controller at <code><a href="{{ 'D:/Labs/Twitter/src/Controller/HomeController.php'|file_link(0) }}">src/Controller/HomeController.php</a></code></li>
-        <li>Your template at <code><a href="{{ 'D:/Labs/Twitter/templates/home/index.html.twig'|file_link(0) }}">templates/home/index.html.twig</a></code></li>
-    </ul>
-</div>
+    
+	<nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
+	<a class="navbar-brand" href="#">Navbar</a>
+	<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
+	<div class="collapse navbar-collapse" id="navbarsExampleDefault">
+		<ul class="navbar-nav mr-auto">
+			<li class="nav-item active">
+				<a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+			</li>
+			<li class="nav-item"><a class="nav-link" href="#">Link</a></li>
+			<li class="nav-item"><a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a></li>
+		</ul>
+	</div>
+</nav>
+<main role="main" class="container">
+	<div class="starter-template">
+		<h1>Bootstrap starter template</h1>
+		<p class="lead">
+			        Use this document as a way to quickly start any new project.        
+			<br>
+			         All you get is this text and a mostly barebones HTML document.      
+		</p>
+    
+    {% for post in posts %}
+    
+    {# {{dump(post)}} #}
+      <div class="container-fluid mx-auto my-3">
+        <div class="card">
+          <div class="card-header d-flex">
+              <div class="text-left"> 
+                <a href="/user/{{ post.user.id }}">
+                <h3>
+                  {{ post.user.firstname}} {{ post.user.lastname}}
+                </h3>
+              </a>
+              <small>{{ post.postedAt ? post.postedAt|date('Y-m-d H:i:s') : '' }}</small>
+              </div>
+          </div>
+          <div class="card-body">
+            <h5 class="card-title">
+              {{post.title}}
+            </h5>
+            <p class="card-text">
+              {{post.content}}
+            </p>
+          </div>
+            <form action="{{ path('like_new', {'postid': post.id}) }}" method="post" >
+              <button type="submit" class="card-link">
+                <i class="far fa-thumbs-up"></i>
+              </button>
+            </form>
+            <form action="/" method="post">
+                <input name="content" type="text"  required>
+                <input type="hidden" name="token" value="{{ csrf_token('comment_new') }}"/>
+                <input type="hidden" name="postid" value="{{ post.id }}"/>
+                <input type="submit" />
+            </form>
+              <ul class="list-group list-group-flush">
+                  {% for comment in post.comments %}
+                    <li class="list-group-item d-flex">
+                        <div>
+                          <div class="text-left">
+                            <span class="font-weight-bold">{{comment.user.firstname}} {{comment.user.lastname}}</span>
+                            <p class="font-weight-light">
+                              {{comment.content}}
+                            </p>
+                          </div>
+                          <a href="{{ path('like_new', {'postid': post.id , 'commentid': comment.id}) }}" class="text-right">
+                            <i class="far fa-thumbs-up"></i>
+                          </a>
+                        </div>
+                    </li>
+                  {% endfor %}
+              </ul>
+          </div>
+        </div>
+      </div>
+
+    {% endfor %}
+
+	</div>
+</main>
+
+
+
+
+
 {% endblock %}

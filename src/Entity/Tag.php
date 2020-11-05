@@ -25,7 +25,7 @@ class Tag
     private $label;
 
     /**
-     * @ORM\OneToMany(targetEntity=TagPost::class, mappedBy="tagId")
+     * @ORM\OneToMany(targetEntity=TagPost::class, mappedBy="tag")
      */
     private $tagPosts;
 
@@ -33,6 +33,8 @@ class Tag
     {
         $this->tagPosts = new ArrayCollection();
     }
+
+
 
     public function getId(): ?int
     {
@@ -63,7 +65,7 @@ class Tag
     {
         if (!$this->tagPosts->contains($tagPost)) {
             $this->tagPosts[] = $tagPost;
-            $tagPost->setTagId($this);
+            $tagPost->setTag($this);
         }
 
         return $this;
@@ -73,11 +75,13 @@ class Tag
     {
         if ($this->tagPosts->removeElement($tagPost)) {
             // set the owning side to null (unless already changed)
-            if ($tagPost->getTagId() === $this) {
-                $tagPost->setTagId(null);
+            if ($tagPost->getTag() === $this) {
+                $tagPost->setTag(null);
             }
         }
 
         return $this;
     }
+
+
 }

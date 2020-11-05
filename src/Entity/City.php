@@ -32,18 +32,15 @@ class City
     /**
      * @ORM\OneToMany(targetEntity=User::class, mappedBy="city")
      */
-    private $userId;
-
-    /**
-     * @ORM\OneToMany(targetEntity=User::class, mappedBy="cityId")
-     */
     private $users;
 
     public function __construct()
     {
-        $this->userId = new ArrayCollection();
         $this->users = new ArrayCollection();
     }
+
+
+
 
     public function getId(): ?int
     {
@@ -77,36 +74,6 @@ class City
     /**
      * @return Collection|User[]
      */
-    public function getUserId(): Collection
-    {
-        return $this->userId;
-    }
-
-    public function addUserId(User $userId): self
-    {
-        if (!$this->userId->contains($userId)) {
-            $this->userId[] = $userId;
-            $userId->setCity($this);
-        }
-
-        return $this;
-    }
-
-    public function removeUserId(User $userId): self
-    {
-        if ($this->userId->removeElement($userId)) {
-            // set the owning side to null (unless already changed)
-            if ($userId->getCity() === $this) {
-                $userId->setCity(null);
-            }
-        }
-
-        return $this;
-    }
-
-    /**
-     * @return Collection|User[]
-     */
     public function getUsers(): Collection
     {
         return $this->users;
@@ -116,7 +83,7 @@ class City
     {
         if (!$this->users->contains($user)) {
             $this->users[] = $user;
-            $user->setCityId($this);
+            $user->setCity($this);
         }
 
         return $this;
@@ -126,11 +93,12 @@ class City
     {
         if ($this->users->removeElement($user)) {
             // set the owning side to null (unless already changed)
-            if ($user->getCityId() === $this) {
-                $user->setCityId(null);
+            if ($user->getCity() === $this) {
+                $user->setCity(null);
             }
         }
 
         return $this;
     }
+
 }

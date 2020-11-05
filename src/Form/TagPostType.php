@@ -12,8 +12,8 @@ class TagPostType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('tagId')
-            ->add('postId')
+            ->add('tag')
+            ->add('post')
         ;
     }
 

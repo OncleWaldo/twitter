@@ -22,19 +22,27 @@ class LikeRepository extends ServiceEntityRepository
     // /**
     //  * @return Like[] Returns an array of Like objects
     //  */
-    /*
-    public function findByExampleField($value)
+    
+    public function findOneOrCreate(array $criteria)
     {
-        return $this->createQueryBuilder('l')
-            ->andWhere('l.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('l.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
+        $like = $this->findOneBy(array(
+            $user = $criteria["user"],
+            $post = $criteria["post"]  
+            
+        )); 
+
+        if ($like === NULL)
+        {   
+           $like->setPost($post);
+           $like->setUser($user);
+           $like = new $this->getClassName();
+           $like->setTheDataSomehow($criteria); 
+           $this->_em->persist($like);
+           $this->_em->flush();
+        }
+
+        return $like;
     }
-    */
 
     /*
     public function findOneBySomeField($value): ?Like

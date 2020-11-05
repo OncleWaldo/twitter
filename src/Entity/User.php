@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
 
@@ -63,7 +65,35 @@ class User implements UserInterface
      * @ORM\ManyToOne(targetEntity=City::class, inversedBy="users")
      * @ORM\JoinColumn(nullable=false)
      */
-    private $cityId;
+    private $city;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Message::class, mappedBy="receiver")
+     */
+    private $messages;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Like::class, mappedBy="user", orphanRemoval=true)
+     */
+    private $likes;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Post::class, mappedBy="user", orphanRemoval=true )
+     */
+    private $posts;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Comment::class, mappedBy="user", orphanRemoval=true)
+     */
+    private $comments;
+
+    public function __construct()
+    {
+        $this->messages = new ArrayCollection();
+        $this->likes = new ArrayCollection();
+        $this->posts = new ArrayCollection();
+        $this->comments = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -203,15 +233,140 @@ class User implements UserInterface
         return $this;
     }
 
-    public function getCityId(): ?City
+    public function getCity(): ?City
     {
-        return $this->cityId;
+        return $this->city;
     }
 
-    public function setCityId(?City $cityId): self
+    public function setCity(?City $city): self
     {
-        $this->cityId = $cityId;
+        $this->city = $city;
 
         return $this;
     }
+
+    /**
+     * @return Collection|Message[]
+     */
+    public function getMessages(): Collection
+    {
+        return $this->messages;
+    }
+
+    public function addMessage(Message $message): self
+    {
+        if (!$this->messages->contains($message)) {
+            $this->messages[] = $message;
+            $message->setReceiver($this);
+        }
+
+        return $this;
+    }
+
+    public function removeMessage(Message $message): self
+    {
+        if ($this->messages->removeElement($message)) {
+            // set the owning side to null (unless already changed)
+            if ($message->getReceiver() === $this) {
+                $message->setReceiver(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Like[]
+     */
+    public function getLikes(): Collection
+    {
+        return $this->likes;
+    }
+
+    public function addLike(Like $like): self
+    {
+        if (!$this->likes->contains($like)) {
+            $this->likes[] = $like;
+            $like->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeLike(Like $like): self
+    {
+        if ($this->likes->removeElement($like)) {
+            // set the owning side to null (unless already changed)
+            if ($like->getUser() === $this) {
+                $like->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Post[]
+     */
+    public function getPosts(): Collection
+    {
+        return $this->posts;
+    }
+
+    public function addPost(Post $post): self
+    {
+        if (!$this->posts->contains($post)) {
+            $this->posts[] = $post;
+            $post->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removePost(Post $post): self
+    {
+        if ($this->posts->removeElement($post)) {
+            // set the owning side to null (unless already changed)
+            if ($post->getUser() === $this) {
+                $post->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+    public function __toString()
+    {
+        return $this->firstName;
+    }
+
+    /**
+     * @return Collection|Comment[]
+     */
+    public function getComments(): Collection
+    {
+        return $this->comments;
+    }
+
+    public function addComment(Comment $comment): self
+    {
+        if (!$this->comments->contains($comment)) {
+            $this->comments[] = $comment;
+            $comment->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeComment(Comment $comment): self
+    {
+        if ($this->comments->removeElement($comment)) {
+            // set the owning side to null (unless already changed)
+            if ($comment->getUser() === $this) {
+                $comment->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
 }

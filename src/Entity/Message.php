@@ -17,17 +17,6 @@ class Message
      */
     private $id;
 
-    /**
-     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="sentMessages")
-     * @ORM\JoinColumn(nullable=false)
-     */
-    private $senderId;
-
-    /**
-     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="receivedMessages")
-     * @ORM\JoinColumn(nullable=false)
-     */
-    private $receiverId;
 
     /**
      * @ORM\Column(type="text")
@@ -39,34 +28,24 @@ class Message
      */
     private $sentAt;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=User::class)
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $sender;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="messages")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $receiver;
+
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getSenderId(): ?User
-    {
-        return $this->senderId;
-    }
-
-    public function setSenderId(?User $senderId): self
-    {
-        $this->senderId = $senderId;
-
-        return $this;
-    }
-
-    public function getReceiverId(): ?User
-    {
-        return $this->receiverId;
-    }
-
-    public function setReceiverId(?User $receiverId): self
-    {
-        $this->receiverId = $receiverId;
-
-        return $this;
-    }
+   
 
     public function getContent(): ?string
     {
@@ -88,6 +67,30 @@ class Message
     public function setSentAt(\DateTimeInterface $sentAt): self
     {
         $this->sentAt = $sentAt;
+
+        return $this;
+    }
+
+    public function getSender(): ?User
+    {
+        return $this->sender;
+    }
+
+    public function setSender(?User $sender): self
+    {
+        $this->sender = $sender;
+
+        return $this;
+    }
+
+    public function getReceiver(): ?User
+    {
+        return $this->receiver;
+    }
+
+    public function setReceiver(?User $receiver): self
+    {
+        $this->receiver = $receiver;
 
         return $this;
     }
