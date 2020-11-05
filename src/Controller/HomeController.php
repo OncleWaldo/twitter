@@ -11,10 +11,24 @@ use App\Entity\Post;
 use App\Entity\Comment;
 use App\Repository\PostRepository;
 use App\Form\HomeType;
+use Binance;
 
 
 class HomeController extends AbstractController
 {
+    /**
+    * @Route("/crypto", name="crypto", methods={"GET","POST"})
+    */
+    public function crypto(Request $request): Response
+    {
+        $api = new Binance\API($_ENV['BINANCE_API_KEY'],$_ENV['BINANCE_PRIVATE_KEY']);
+        $pricelist = $api->prices();
+        $prevDay = $api->prevDay("BNBBTC");
+        return $this->render('home/crypto.html.twig', [
+            'pricelist' => $pricelist,
+            'prevday' => $prevDay
+        ]);
+    }
     
 
     /**

@@ -1,0 +1,40 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Crypto page{% endblock %}
+
+{% block body %}
+    <h1>Bienvenue</h1>
+{{ dump(prevday) }}
+
+<ul class="list-group list-group-horizontal-md">
+  <li class="list-group-item">{{ prevday.symbol }}</li>
+  <li class="list-group-item">Dernier Achat : <strong>{{ prevday.lastPrice}}</strong></li>
+  <li class="list-group-item">Prix demandé : <strong>{{ prevday.bidPrice }}</strong></li>
+  <li class="list-group-item">Prix proposé : <strong>{{ prevday.askPrice }}</strong></li>
+</ul>
+
+    <table class="table table-striped table-dark">
+  <thead>
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col">Symbol</th>
+      <th scope="col">Price</th>
+
+    </tr>
+  </thead>
+  <tbody>
+  {% for key , price in pricelist  %}
+    <tr>
+      <th scope="row">{{loop.index}}</th>
+      <td>{{key}}</td>
+      <td>{{price}}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+
+    
+{% endblock %}
+
+

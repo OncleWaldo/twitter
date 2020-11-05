@@ -1,6 +1,48 @@
 {
+    "evenement/evenement": {
+        "version": "v3.0.1"
+    },
+    "guzzlehttp/psr7": {
+        "version": "1.7.0"
+    },
+    "jaggedsoft/php-binance-api": {
+        "version": "dev-master"
+    },
     "php": {
         "version": "7.4"
+    },
+    "psr/http-message": {
+        "version": "1.0.1"
+    },
+    "ralouphie/getallheaders": {
+        "version": "3.0.3"
+    },
+    "ratchet/pawl": {
+        "version": "v0.3.4"
+    },
+    "ratchet/rfc6455": {
+        "version": "v0.2.6"
+    },
+    "react/cache": {
+        "version": "v1.1.0"
+    },
+    "react/dns": {
+        "version": "v1.4.0"
+    },
+    "react/event-loop": {
+        "version": "v1.1.1"
+    },
+    "react/promise": {
+        "version": "v2.8.0"
+    },
+    "react/promise-timer": {
+        "version": "v1.6.0"
+    },
+    "react/socket": {
+        "version": "v1.6.0"
+    },
+    "react/stream": {
+        "version": "v1.1.1"
     },
     "symfony/webpack-encore-bundle": {
         "version": "1.6",

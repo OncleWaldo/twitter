@@ -51,6 +51,7 @@
               {{post.content}}
             </p>
           </div>
+          <div class="card-footer">
             <form action="{{ path('like_new', {'postid': post.id}) }}" method="post" >
               <button type="submit" class="card-link">
                 <i class="far fa-thumbs-up"></i>
