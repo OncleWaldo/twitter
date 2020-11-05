@@ -32,16 +32,15 @@ class HomeController extends AbstractController
         $comment = new Comment();
       
 
-        if ($this->isCsrfTokenValid('comment_new', $submittedToken) && $submittedPostId !== NULL ) {
-
-                $post = $em->getRepository(Post::class)->find((int) $submittedPostId);
-                $comment->setContent($submittedContent);
-                $comment->setUser($this->getUser());
-                $comment->setPost($post);
-                $entityManager = $this->getDoctrine()->getManager();
-                $entityManager->persist($comment);
-                $entityManager->flush();
-                return $this->redirectToRoute('root');
+        if ($this->isCsrfTokenValid('comment_new', $submittedToken) && $submittedPostId  ) {
+            $post = $em->getRepository(Post::class)->find((int) $submittedPostId);
+            $comment->setContent($submittedContent);
+            $comment->setUser($this->getUser());
+            $comment->setPost($post);
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->persist($comment);
+            $entityManager->flush();
+            return $this->redirectToRoute('root');
         }
 
         return $this->render('home/index.html.twig', [

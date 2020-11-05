@@ -51,10 +51,11 @@
               {{post.content}}
             </p>
           </div>
-          <div class="card-footer">
-            <a href="{{ path('like_new', {'postid': post.id}) }}" class="card-link">
-              <i class="far fa-thumbs-up"></i>
-            </a>
+            <form action="{{ path('like_new', {'postid': post.id}) }}" method="post" >
+              <button type="submit" class="card-link">
+                <i class="far fa-thumbs-up"></i>
+              </button>
+            </form>
             <form action="/" method="post">
                 <input name="content" type="text"  required>
                 <input type="hidden" name="token" value="{{ csrf_token('comment_new') }}"/>

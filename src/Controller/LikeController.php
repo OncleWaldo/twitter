@@ -42,9 +42,9 @@ class LikeController extends AbstractController
 
         if ($user != NULL) {
             // get params from query string and set o a variable
-            $postId = $request->request->get("postid");
-            $commentId = $request->request->get("commentid");
-            
+            $postId = $request->query->get("postid");
+            $commentId = $request->query->get("commentid");
+            // printf($postId);
             // Create new Like object
             $like = new Like();
             
@@ -53,22 +53,32 @@ class LikeController extends AbstractController
             $form->handleRequest($request);
         
             // check if post id exist before going to DB to avoid constraint violation 
-            if ($postId !== "" ) {
+            if (isset($postId)) {
                 // get back the current Post Object
                 $post = new Post();
                 $post =  $em->getRepository(Post::class)->find((int) $postId);  
 
                 // Check if one exist  already for a user/like/comment set 
-                $like =  $em->getRepository(Post::class)->findOneOrCreate(array('user' => $user, 'post' => $post));  
+                $like =  $em->getRepository(Like::class)->findOneBy(array(
+                    "post" => $post,
+                    "user" => $user
+                ));  
+                if (!isset($like)) {
+                    $like = new Like();
+                }
                 // Set the Like object with the current Post Object 
                 $like->setPost($post);
                 $like->setUser($user);
                 // Check if a comment id exist before going to DB to avoid constraint violation 
-                if ($commentId !== "") {
+                if (isset($commentId)) {
                     // Get back the current Comment Object
                     $comment = new Comment();
                     $comment =  $em->getRepository(Comment::class)->find( (int) $commentId);  
-                    $like =  $em->getRepository(Post::class)->findOneOrCreate(array('user' => $user, 'post' => $post, 'comment' => $comment));  
+                    $like =  $em->getRepository(Like::class)->findOneBy(array(
+                        "post" => $post,
+                        "user" => $user,
+                        "comment" => $comment
+                    ));  
                     // Set the Comment Object to the like Object
                     $like->setComment($comment);
                 }
@@ -78,7 +88,9 @@ class LikeController extends AbstractController
     
                 // redirect after action all OK
                 return $this->redirectToRoute('root');
-            }
+            } 
+
+            
     
             // redirect if no post id (meaning that we go on the crud page) 
             return $this->render('like/new.html.twig', [
