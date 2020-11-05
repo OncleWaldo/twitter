@@ -3,8 +3,12 @@
 namespace App\Controller;
 
 use App\Entity\Like;
+use App\Entity\Comment;
+use App\Entity\Post;
 use App\Form\LikeType;
 use App\Repository\LikeRepository;
+use App\Repository\PostRepository;
+use App\Repository\CommentRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -30,17 +34,34 @@ class LikeController extends AbstractController
      */
     public function new(Request $request): Response
     {
+        $em = $this->getDoctrine()->getManager(); 
+
+       
         $like = new Like();
         $form = $this->createForm(LikeType::class, $like);
         $form->handleRequest($request);
+        $postId = $request->request->get("postid");
+        $commentId = $request->request->get("commentid");
+    
+        if ( $postId ) {
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager = $this->getDoctrine()->getManager();
+            $post = new Post();
+            
+            $post =  $em->getRepository(Post::class)->find( (int) $postId);  
+            $like->setPost($post);
             $like->setUser($this->getUser());
-            $entityManager->persist($like);
-            $entityManager->flush();
+            if ( $commentId) {
 
-            return $this->redirectToRoute('like_index');
+                $comment =  $em->getRepository(Comment::class)->find( (int) $commentId);  
+                $comment = new Comment();
+                $like->setComment($comment);
+
+            }
+            $em->persist($like);
+            $em->flush();
+            
+
+            return $this->redirectToRoute('root');
         }
 
         return $this->render('like/new.html.twig', [
