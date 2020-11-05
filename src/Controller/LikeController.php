@@ -73,12 +73,18 @@ class LikeController extends AbstractController
                 if (isset($commentId)) {
                     // Get back the current Comment Object
                     $comment = new Comment();
-                    $comment =  $em->getRepository(Comment::class)->find( (int) $commentId);  
+                    $comment =  $em->getRepository(Comment::class)->find((int) $commentId);  
                     $like =  $em->getRepository(Like::class)->findOneBy(array(
                         "post" => $post,
                         "user" => $user,
                         "comment" => $comment
-                    ));  
+                    ));
+                    if (!isset($like)) {
+                        $like = new Like();
+                    }
+                    // Set the Like object with the current Post Object 
+                    $like->setPost($post);
+                    $like->setUser($user);
                     // Set the Comment Object to the like Object
                     $like->setComment($comment);
                 }
